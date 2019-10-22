@@ -1,7 +1,10 @@
 # DDMON
 ---
 
-<center><img src="https://wikimon.net/images/0/02/Dodomon.jpg"></center>
+
+<p align="center">
+  <img src="https://wikimon.net/images/0/02/Dodomon.jpg">
+</p>
 
 # Description
 
