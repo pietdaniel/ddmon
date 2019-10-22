@@ -1,43 +1,25 @@
 # DDMON
 ---
 
+<center><img src="https://wikimon.net/images/0/02/Dodomon.jpg"></center>
+
 # Description
 
 `ddmon` is a simple means to manage Datadog monitors via templates + terraform.
 It is opinionated on the structure of a monitor.
-It allows for monitors to be used through templates.
+It allows for terse YAML monitor definitions.
 
-# TODO
+Note: This project is under active development and is not intended to be used in production.
 
-This project is in active development. There is much work to be done.
-
-- documentation
-- error handling
-- verbose and quiet mode
-- testing
-- terraform generators
-- notification targets and expectations
-- update templates to be generic
-
-# Development
+# Contribution Guides
 
 TODO
 
-# How To Use
+# Usage
 
-ddmon generate
+TODO
 
-ddmon add monitor
-ddmon add group
-ddmon add namespace
-
-## Datadog Specific Features
-
-slack expecation (should just be notificaiton targets)
-pager expectation (part of notifications)
-datacenters (part of a general substitution mechanism)
-
-## Expected PRoject Sturcture
+## Expected Project Sturcture
 
 ```
 /monitors
@@ -62,7 +44,7 @@ datacenters (part of a general substitution mechanism)
 
 ## Guide
 
-All monitors are defined in yaml files.
+All monitors are defined in YAML files.
 
 #### Data Inheritance
 
@@ -111,6 +93,4 @@ The following fields are directly equivelent to their [terraform specification](
 
 ## Useful Links
 
- - Initially, all monitors were dumped with [dd2tf](https://github.com/amnk/dd2tf). This made it easier to create the yaml files.
  - [Datadog Terraform Docs](https://www.terraform.io/docs/providers/datadog/r/monitor.html)
-
