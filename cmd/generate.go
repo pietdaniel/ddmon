@@ -23,7 +23,7 @@ func init() {
 
 	generateCmd.Flags().StringVarP(&TargetDir, "target-dir", "t", "./output", "Target directory to write to")
 	generateCmd.Flags().StringVarP(&SourceDir, "source-dir", "s", "./", "Target directory to read from")
-	generateCmd.Flags().StringVarP(&TemplateDir, "template-dir", "p", "./templates", "Target directory to read templates from")
+	generateCmd.Flags().StringVarP(&TemplateDir, "template-dir", "p", "./resources/templates", "Target directory to read templates from")
 
 	generateCmd.MarkFlagRequired("target-dir")
 	generateCmd.MarkFlagRequired("source-dir")
