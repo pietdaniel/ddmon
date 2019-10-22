@@ -1,6 +1,4 @@
 # DDMON
----
-
 
 <p align="center">
   <img src="https://wikimon.net/images/0/02/Dodomon.jpg">
@@ -22,9 +20,13 @@ TODO
 
 TODO
 
+# Setup
+
+TODO
+
 ## Expected Project Sturcture
 
-```
+```bash
 /monitors
   output/
     *.tf
