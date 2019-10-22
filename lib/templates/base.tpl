@@ -8,7 +8,7 @@ resource "datadog_monitor" {{ $identifier | quote }} {
   name = {{ $name | quote }}
 {{- end -}}
 
-{{- define "TYPE" -}}
+{{- define "TYPE" }}
   type = {{ $.type | quote }}
 {{- end -}}
 

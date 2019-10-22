@@ -16,66 +16,37 @@ func Generate(cmd *cobra.Command, args []string) {
 	// Get arguments
 	targetDir := cmd.Flags().Lookup("target-dir").Value.String()
 	sourceDir := cmd.Flags().Lookup("source-dir").Value.String()
-	log.Printf("Generating from: %s to: %s", sourceDir, targetDir)
+	templateDir := cmd.Flags().Lookup("template-dir").Value.String()
+	log.Printf("Generating from: %s to: %s. Template Dir: %s", sourceDir, targetDir, templateDir)
+
+	mustGetPath(targetDir)
+	mustGetPath(sourceDir)
+	mustGetPath(templateDir)
 
 	deleteFilesFromOutputDirectory(targetDir)
 
 	// Find data directory
-	dataDir := fmt.Sprintf("%s/data", sourceDir)
-	if _, err := os.Stat(dataDir); os.IsExist(err) {
-		log.Fatalf("Could not find data directory at: %s", dataDir)
-	}
-
-	// Find template directory
-	templateDir := fmt.Sprintf("%s/templates", sourceDir)
-	if _, err := os.Stat(templateDir); os.IsExist(err) {
-		log.Fatalf("Could not find data directory at: %s", templateDir)
-	}
+	dataDir := mustGetPath(fmt.Sprintf("%s/data", sourceDir))
 
 	// Look for common.yaml in base data directory
-	dataCommonFilePath := fmt.Sprintf("%s/common.yaml", dataDir)
-	_, err := os.Stat(dataCommonFilePath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	dataCommonFilePath := mustGetPath(fmt.Sprintf("%s/common.yaml", dataDir))
 
 	// Aggregate all namepsaces "data/$NAMESPACE/$GROUP/monitor-a.yaml
 	namespaces := getFolderNames(dataDir)
 	for _, namespace := range namespaces {
 		log.Printf("Generating on namespace: %v", namespace)
-		namespaceDir := fmt.Sprintf("%s/%s", dataDir, namespace)
+		namespaceDir := mustGetPath(fmt.Sprintf("%s/%s", dataDir, namespace))
 
 		// Look for namespace common.yaml
-		namespaceCommonFilePath := fmt.Sprintf("%s/common.yaml", namespaceDir)
-		_, err := os.Stat(namespaceCommonFilePath)
-		if err != nil {
-			log.Fatal(err)
-		}
+		namespaceCommonFilePath := mustGetPath(fmt.Sprintf("%s/common.yaml", namespaceDir))
 
 		groups := getFolderNames(namespaceDir)
 		for _, group := range groups {
 			log.Printf("Generating on group: %s", group)
 
-			groupDir := fmt.Sprintf("%s/%s", namespaceDir, group)
-			// Look for namespace common.yaml
-			groupCommonFilePath := fmt.Sprintf("%v/common.yaml", groupDir)
-			_, err := os.Stat(groupCommonFilePath)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			templatesDir := fmt.Sprintf("%s/templates", sourceDir)
-			baseTplFilePath := fmt.Sprintf("%s/%s", templatesDir, "base.tpl")
-			_, err = os.Stat(baseTplFilePath)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			defaultTplFilePath := fmt.Sprintf("%s/%s", templatesDir, "default.tpl")
-			_, err = os.Stat(defaultTplFilePath)
-			if err != nil {
-				log.Fatal(err)
-			}
+			// Look for group common.yaml
+			groupDir := mustGetPath(fmt.Sprintf("%s/%s", namespaceDir, group))
+			groupCommonFilePath := mustGetPath(fmt.Sprintf("%v/common.yaml", groupDir))
 
 			commonDataFiles := []string{dataCommonFilePath, namespaceCommonFilePath, groupCommonFilePath}
 
@@ -87,22 +58,50 @@ func Generate(cmd *cobra.Command, args []string) {
 					panic(err)
 				}
 
-				templates := []string{baseTplFilePath}
+				templates := getListOfTemplates(templateDir, monitor, group, namespace)
 
-				if tpl, ok := checkForTplFile(monitor, sourceDir); ok {
-					templates = append(templates, tpl)
-				} else if tpl, ok := checkForTplFile(group, sourceDir); ok {
-					templates = append(templates, tpl)
-				} else if tpl, ok := checkForTplFile(namespace, sourceDir); ok {
-					templates = append(templates, tpl)
-				} else {
-					templates = []string{baseTplFilePath, defaultTplFilePath}
-				}
+				filename := fmt.Sprintf("%s-%s", group, monitor)
 
-				render(templates, filePaths, monitor, targetDir)
+				render(templates, filePaths, filename, targetDir)
 			}
 		}
 	}
+}
+
+// mustGetFilePath gets a path to a file, if the file does not exist it fatally exits
+func mustGetPath(path string) string {
+	_, err := os.Stat(path)
+	if err != nil {
+		log.Printf("Could not find path: %s", path)
+		log.Fatal(err)
+	}
+	return path
+}
+
+// getListOfTemplates will return the list of templates file paths as strings for the given monitor
+// the heuristic is as follows:
+//   if there is a template with the $MONITOR_NAME.tpl return [$MONITOR_NAME.tpl, base.tpl]
+//   if there is a template with the $GROUP.tpl return [$GROUP.tpl, base.tpl]
+//   if there is a template with the $NAMESPACE.tpl return [$NAMESPACE.tpl, base.tpl]
+//   else return [default.tpl, base.tpl]
+func getListOfTemplates(templateDir, monitor, group, namespace string) []string {
+	baseTplFilePath := mustGetPath(fmt.Sprintf("%s/%s", templateDir, "base.tpl"))
+	defaultTplFilePath := mustGetPath(fmt.Sprintf("%s/%s", templateDir, "default.tpl"))
+
+	templates := []string{baseTplFilePath}
+
+	// Template mapping
+	if tpl, ok := checkForTplFile(monitor, templateDir); ok {
+		templates = append(templates, tpl)
+	} else if tpl, ok := checkForTplFile(group, templateDir); ok {
+		templates = append(templates, tpl)
+	} else if tpl, ok := checkForTplFile(namespace, templateDir); ok {
+		templates = append(templates, tpl)
+	} else {
+		templates = []string{baseTplFilePath, defaultTplFilePath}
+	}
+
+	return templates
 }
 
 func checkForTplFile(name string, sourceDir string) (string, bool) {
@@ -157,7 +156,7 @@ func getMonitorDataFilesPaths(dir string) []string {
 func deleteFilesFromOutputDirectory(outputPath string) {
 	log.Printf("Clearing files from %s", outputPath)
 	err := filepath.Walk(outputPath, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() {
+		if !info.IsDir() && info.Name() != "@config.tf" && info.Name() != "@provider.tf" {
 			log.Printf("Remove file: %s", path)
 			os.Remove(path)
 		}
