@@ -34,6 +34,7 @@ var rootCmd = &cobra.Command{
 	Long: `Given many common monitor patterns, ddmon aids in generating terraform
 files for Datadog by providing a rich templating language built off sprig and terse
 YAML monitor definitions to generate terraform Datadog monitors.`,
+	Version: "0.0.1",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
