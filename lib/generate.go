@@ -23,8 +23,6 @@ func Generate(cmd *cobra.Command, args []string) {
 	mustGetPath(sourceDir)
 	mustGetPath(templateDir)
 
-	deleteFilesFromOutputDirectory(targetDir)
-
 	// Find data directory
 	dataDir := mustGetPath(fmt.Sprintf("%s/data", sourceDir))
 
@@ -151,18 +149,4 @@ func getMonitorDataFilesPaths(dir string) []string {
 		log.Fatal(err)
 	}
 	return files
-}
-
-func deleteFilesFromOutputDirectory(outputPath string) {
-	log.Printf("Clearing files from %s", outputPath)
-	err := filepath.Walk(outputPath, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() && info.Name() != "@config.tf" && info.Name() != "@provider.tf" {
-			log.Printf("Remove file: %s", path)
-			os.Remove(path)
-		}
-		return nil
-	})
-	if err != nil {
-		log.Fatal(err)
-	}
 }
