@@ -1,4 +1,4 @@
-module github.com/DataDog/ddmon
+module github.com/pietdaniel/ddmon
 
 go 1.15
 
