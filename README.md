@@ -19,7 +19,7 @@ Note: This project is under active development and is not intended to be used in
 go get github.com/pietdaniel/ddmon
 
 # Install a specific version
-go get github.com/pietdaniel/ddmon@v0.0.2
+go get github.com/pietdaniel/ddmon@v0.0.3
 ```
 
 ## Usage
