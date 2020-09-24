@@ -12,7 +12,7 @@ It allows for terse YAML monitor definitions.
 
 Note: This project is under active development and is not intended to be used in production.
 
-## Installation
+## Setup
 
 ```sh
 # Install the latest version
@@ -22,15 +22,30 @@ go get github.com/pietdaniel/ddmon
 go get github.com/pietdaniel/ddmon@v0.0.2
 ```
 
-## Contribution Guides
-
-TODO
-
 ## Usage
 
-TODO
+```text
+Given many common monitor patterns, ddmon aids in generating terraform
+files for Datadog by providing a rich templating language built off sprig and terse
+YAML monitor definitions to generate terraform Datadog monitors.
 
-## Setup
+Usage:
+  ddmon [command]
+
+Available Commands:
+  generate    Generates all templates into terraform files
+  help        Help about any command
+  init        Initialze the directory for ddmon usage
+
+Flags:
+      --config string   config file (default is $HOME/.ddmon.yaml)
+  -h, --help            help for ddmon
+      --version         version for ddmon
+
+Use "ddmon [command] --help" for more information about a command.
+```
+
+## Contribution Guides
 
 TODO
 
