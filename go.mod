@@ -17,7 +17,6 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/pelletier/go-toml v1.4.0 // indirect
-	github.com/pietdaniel/ddmon v0.0.0-20191023143245-e50372cc6523
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
