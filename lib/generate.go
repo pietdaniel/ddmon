@@ -105,7 +105,7 @@ func getListOfTemplates(templateDir, monitor, group, namespace string) []string 
 }
 
 func checkForTplFile(name string, sourceDir string) (string, bool) {
-	tplFilePath := fmt.Sprintf("%s/templates/%s.tpl", sourceDir, name)
+	tplFilePath := fmt.Sprintf("%s/%s.tpl", sourceDir, name)
 	_, err := os.Stat(tplFilePath)
 	if err != nil {
 		log.Printf("Could not find template %s", tplFilePath)
