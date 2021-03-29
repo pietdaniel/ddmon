@@ -37,7 +37,7 @@ func render(tplPaths, dataPaths []string, filename, outputPath string) {
 	}
 
 	if err := t.Execute(f, data); err != nil {
-		log.Printf("Failed to render template: %v %v", tplPaths, dataPaths)
+		log.Printf("Failed to render template: %v %v %s", tplPaths, dataPaths, err)
 	}
 	// todo extract to function
 
