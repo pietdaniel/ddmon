@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.5] - 2020-09-24
+### Fixed
+- bug: checkForTplFile checks wrong dir #7
+
 ## [0.0.4] - 2020-09-24
 ### Changed
 - Update module installation instructions and dependencies #6
