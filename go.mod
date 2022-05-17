@@ -23,6 +23,6 @@ require (
 	github.com/spf13/viper v1.4.0
 	github.com/zclconf/go-cty v1.1.0 // indirect
 	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4 // indirect
-	golang.org/x/sys v0.0.0-20190712062909-fae7ac547cb7 // indirect
+	golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a // indirect
 	gopkg.in/yaml.v2 v2.2.2
 )
