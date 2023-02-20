@@ -3,7 +3,7 @@ module github.com/pietdaniel/ddmon
 go 1.15
 
 require (
-	github.com/Masterminds/goutils v1.1.0 // indirect
+	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver v1.4.2 // indirect
 	github.com/Masterminds/sprig v2.20.0+incompatible
 	github.com/agext/levenshtein v1.2.2 // indirect
